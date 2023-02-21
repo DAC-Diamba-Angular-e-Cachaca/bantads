@@ -1,7 +1,8 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Login } from './../../../shared/models/login.model';
 import { User } from './../../../shared/models/user.model';
-import { UserService } from './user.service';
 
 const LS_USER: string = 'user';
 const LS_CONTA: string = 'conta';
@@ -10,6 +11,16 @@ const LS_CONTA: string = 'conta';
   providedIn: 'root',
 })
 export class AuthService {
+  private apUrlAuth = 'http://localhost:5001/autenticacao/';
+
+  constructor(private http: HttpClient) {}
+
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+    }),
+  };
+
   public get usuarioLogado(): User {
     return localStorage[LS_USER] ? JSON.parse(localStorage[LS_USER]) : null;
   }
@@ -26,10 +37,8 @@ export class AuthService {
     localStorage[LS_CONTA] = JSON.stringify(usuario);
   }
 
-  constructor(private userService: UserService) {}
-
-  async login(login: Login) {
-    // login
+  login(login: Login): Observable<User> {
+    return this.http.post<Login>(this.apUrlAuth + '/login', this.httpOptions);
   }
 
   logout() {

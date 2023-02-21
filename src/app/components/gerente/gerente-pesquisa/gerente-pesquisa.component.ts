@@ -8,11 +8,11 @@ import {
 import { ClienteService } from '@components/cliente/services/cliente.service';
 import { City } from '@shared/models/city.model';
 import { State } from '@shared/models/state.model';
-import { CityService } from '@shared/services/city.service';
-import { StateService } from '@shared/services/state.service';
 import { Conta } from './../../../shared/models/conta.model';
 import { User } from './../../../shared/models/user.model';
 import { UserService } from './../../auth/services/user.service';
+const jsonCities = require('@shared/data/cities.json');
+const jsonStates = require('@shared/data/states.json');
 
 @Component({
   selector: 'app-gerente-pesquisa',
@@ -32,9 +32,7 @@ export class GerentePesquisaComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private contaService: ClienteService,
-    private userService: UserService,
-    private stateService: StateService,
-    private cityService: CityService
+    private userService: UserService
   ) {
     this.form = this.formBuilder.group({
       cpf: new FormControl('', [
@@ -62,12 +60,12 @@ export class GerentePesquisaComponent implements OnInit {
         return;
       }
       this.user = users[0];
-      this.stateService
-        .getStateById(this.user.estado!)
-        .subscribe((state: State) => (this.state = state));
-      this.cityService
-        .getCityById(this.user.cidade!)
-        .subscribe((city: City) => (this.city = city));
+      this.state = jsonStates.find(
+        (state: State) => (state.id = this.user?.estado)
+      );
+      this.city = jsonCities.find(
+        (city: City) => (city.id = this.user?.cidade)
+      );
       this.contaService
         .buscarContaPorUserId(this.user.id!)
         .subscribe((conta: Conta[]) => {

@@ -9,7 +9,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 import { SharedModule } from '@shared/shared.module';
 import { AngularMaterialModule } from '../../angular-material.module';
-import { AppRoutingModuleCliente } from './app-routing-gerente';
 import { GerenteClienteDetalhesComponent } from './gerente-cliente-detalhes/gerente-cliente-detalhes.component';
 import { GerenteClientesComponent } from './gerente-clientes/gerente-clientes.component';
 import { GerenteHomeComponent } from './gerente-home/gerente-home.component';
@@ -27,7 +26,6 @@ import { GerentePesquisaComponent } from './gerente-pesquisa/gerente-pesquisa.co
   ],
   imports: [
     CommonModule,
-    AppRoutingModuleCliente,
     FormsModule,
     HttpClientModule,
     AngularMaterialModule,

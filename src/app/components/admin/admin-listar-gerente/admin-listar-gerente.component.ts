@@ -115,7 +115,7 @@ export class AdminListarGerenteComponent implements OnInit {
               })
             );
 
-            this.userService.remover(id).subscribe(() => {
+            this.userService.removerGerente(id).subscribe(() => {
               const currentUrl = this.router.url;
               this.router
                 .navigateByUrl('/', { skipLocationChange: true })

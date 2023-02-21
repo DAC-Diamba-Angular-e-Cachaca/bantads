@@ -13,9 +13,9 @@ import { lastValueFrom, map, of } from 'rxjs';
 import { concatAll, last } from 'rxjs/operators';
 import { City } from './../../../shared/models/city.model';
 import { State } from './../../../shared/models/state.model';
-import { CityService } from './../../../shared/services/city.service';
-import { StateService } from './../../../shared/services/state.service';
 import { UserService } from './../services/user.service';
+const jsonCities = require('@shared/data/cities.json');
+const jsonStates = require('@shared/data/states.json');
 
 @Component({
   selector: 'app-register',
@@ -29,8 +29,6 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private cityService: CityService,
-    private stateService: StateService,
     private userService: UserService,
     private clienteService: ClienteService,
     private router: Router
@@ -79,9 +77,7 @@ export class RegisterComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.stateService
-      .getAllStates()
-      .subscribe((states: State[]) => (this.states = states));
+    this.states = jsonStates;
   }
 
   async register(): Promise<void> {
@@ -242,12 +238,10 @@ export class RegisterComponent implements OnInit {
   }
 
   fillCities($event: any): void {
-    this.cityService
-      .getCitiesByStateId(+this.form.get('state')?.value)
-      .subscribe((cities: City[]) => {
-        this.form.get('city')?.enable();
-        this.cities = cities;
-      });
+    this.cities = jsonCities.filter(
+      (city: City) => (city.estado = +this.form.get('state')?.value)
+    );
+    this.form.get('city')?.enable();
   }
 
   // get passwordsMatch(): boolean {

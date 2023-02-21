@@ -9,10 +9,10 @@ import { ClienteService } from '@components/cliente/services/cliente.service';
 import { City } from '@shared/models/city.model';
 import { Conta } from '@shared/models/conta.model';
 import { State } from '@shared/models/state.model';
-import { CityService } from '@shared/services/city.service';
-import { StateService } from '@shared/services/state.service';
 import { lastValueFrom, map } from 'rxjs';
 import { User } from './../../../shared/models/user.model';
+const jsonCities = require('@shared/data/cities.json');
+const jsonStates = require('@shared/data/states.json');
 
 interface IClienteCompleto {
   conta: Conta;
@@ -39,8 +39,6 @@ export class GerenteClientesComponent implements OnInit {
     private contaService: ClienteService,
     private authService: AuthService,
     private userService: UserService,
-    private stateService: StateService,
-    private cityService: CityService,
     private router: Router
   ) {}
 
@@ -57,25 +55,19 @@ export class GerenteClientesComponent implements OnInit {
             await lastValueFrom(
               this.userService.getUserById(item.idUsuario!).pipe(
                 map((user: User) => {
-                  let cidade: City;
-                  let estado: State;
-                  this.stateService
-                    .getStateById(user.estado!)
-                    .subscribe((state: State) => {
-                      estado = state;
-                      this.cityService
-                        .getCityById(user.cidade!)
-                        .subscribe((city: City) => {
-                          cidade = city;
-                          this.clientes.push({
-                            conta: item,
-                            cliente: user,
-                            city: cidade,
-                            state: estado,
-                          });
-                          this.checkFiltro();
-                        });
-                    });
+                  const estado: State = jsonStates.find(
+                    (state: State) => (state.id = user.estado)
+                  );
+                  const cidade: City = jsonCities.find(
+                    (city: City) => (city.id = user.cidade)
+                  );
+                  this.clientes.push({
+                    conta: item,
+                    cliente: user,
+                    city: cidade,
+                    state: estado,
+                  });
+                  this.checkFiltro();
                 })
               )
             );
