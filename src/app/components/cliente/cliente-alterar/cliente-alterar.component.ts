@@ -12,10 +12,10 @@ import { City } from '@shared/models/city.model';
 import { Conta } from '@shared/models/conta.model';
 import { State } from '@shared/models/state.model';
 import { User } from '@shared/models/user.model';
-import { CityService } from '@shared/services/city.service';
-import { StateService } from '@shared/services/state.service';
 import { lastValueFrom, map, Observable } from 'rxjs';
 import { ClienteService } from '../services';
+const jsonCities = require('@shared/data/cities.json');
+const jsonStates = require('@shared/data/states.json');
 
 @Component({
   selector: 'app-cliente-alterar',
@@ -37,8 +37,6 @@ export class ClienteAlterarComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private cityService: CityService,
-    private stateService: StateService,
     private userService: UserService,
     private clienteService: ClienteService,
     private router: Router,
@@ -103,9 +101,7 @@ export class ClienteAlterarComponent implements OnInit {
       }
     });
 
-    this.stateService
-      .getAllStates()
-      .subscribe((states: State[]) => (this.states = states));
+    this.states = jsonStates;
   }
 
   async register(): Promise<void> {
@@ -198,23 +194,19 @@ export class ClienteAlterarComponent implements OnInit {
   }
 
   fillCities($event?: any): void {
-    this.cityService
-      .getCitiesByStateId(+this.form.get('state')?.value)
-      .subscribe((cities: City[]) => {
-        this.form.get('city')?.enable();
-        this.cities = cities;
-        this.form.get('city')?.setValue(this.cidade);
-      });
+    this.cities = jsonCities.filter(
+      (city: City) => (city.estado = +this.form.get('state')?.value)
+    );
+    this.form.get('city')?.enable();
+    this.form.get('city')?.setValue(this.cidade);
   }
 
   preencherCampos() {
-    this.cityService
-      .getCitiesByStateId(this.dadosUsuario.estado!)
-      .subscribe((cities: City[]) => {
-        this.form.get('city')?.enable();
-        this.cities = cities;
-        this.form.get('city')?.setValue(this.dadosUsuario.cidade!);
-      });
+    this.cities = jsonCities.filter(
+      (city: City) => (city.estado = +this.form.get('state')?.value)
+    );
+    this.form.get('city')?.enable();
+    this.form.get('city')?.setValue(this.dadosUsuario.cidade!);
     this.form.get('name')?.setValue(this.dadosUsuario.nome);
     this.form.get('email')?.setValue(this.dadosUsuario.email);
     this.form.get('password')?.setValue(this.dadosUsuario.senha);

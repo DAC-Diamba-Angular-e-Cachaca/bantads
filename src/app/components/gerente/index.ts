@@ -1,3 +1,3 @@
-export * from './gerente.module';
-export * from './app-routing-gerente';
+export * from './app-routing-gerente.module';
 export * from './gerente-home';
+export * from './gerente.module';

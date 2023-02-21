@@ -9,9 +9,10 @@ import { City } from '@shared/models/city.model';
 import { Conta } from '@shared/models/conta.model';
 import { State } from '@shared/models/state.model';
 import { User } from '@shared/models/user.model';
-import { CityService } from '@shared/services/city.service';
-import { StateService } from '@shared/services/state.service';
 import { lastValueFrom, map } from 'rxjs';
+const jsonCities = require('@shared/data/cities.json');
+const jsonStates = require('@shared/data/states.json');
+
 interface IClienteCompleto {
   conta: Conta;
   cliente: User;
@@ -35,9 +36,7 @@ export class GerenteMelhoresClientesComponent implements OnInit {
   constructor(
     private contaService: ClienteService,
     private authService: AuthService,
-    private userService: UserService,
-    private stateService: StateService,
-    private cityService: CityService
+    private userService: UserService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -54,56 +53,48 @@ export class GerenteMelhoresClientesComponent implements OnInit {
             await lastValueFrom(
               this.userService.getUserById(item.idUsuario!).pipe(
                 map((user: User) => {
-                  let cidade: City;
-                  let estado: State;
-                  this.stateService
-                    .getStateById(user.estado!)
-                    .subscribe((state: State) => {
-                      estado = state;
-                      this.cityService
-                        .getCityById(user.cidade!)
-                        .subscribe((city: City) => {
-                          cidade = city;
-                          this.clientes.push({
-                            conta: item,
-                            cliente: user,
-                            city: cidade,
-                            state: estado,
-                          });
-                          this.dataSource = new MatTableDataSource(
-                            this.clientes
-                          );
-                          this.dataSource.paginator = this.paginator;
-                          this.dataSource.sort = this.sort;
-                          this.dataSource.sortingDataAccessor = (
-                            item: IClienteCompleto,
-                            property: string
-                          ) => {
-                            switch (property) {
-                              case 'id':
-                                return item.cliente.id;
-                              case 'nome':
-                                return item.cliente.nome;
-                              case 'cpf':
-                                return item.cliente.cpf;
-                              case 'saldo':
-                                return item.conta.saldo;
-                              case 'cidade':
-                                return item.city.nome;
-                              case 'estado':
-                                return item.city.estado;
-                              default:
-                                return (item as any)[property];
-                            }
-                          };
-                          const sortState: Sort = {
-                            active: 'saldo',
-                            direction: 'desc',
-                          };
-                          this.sort.direction = sortState.direction;
-                          this.sort.sortChange.emit(sortState);
-                        });
-                    });
+                  const estado: State = jsonStates.find(
+                    (state: State) => (state.id = user.estado)
+                  );
+                  const cidade: City = jsonCities.find(
+                    (city: City) => (city.id = user.cidade)
+                  );
+                  this.clientes.push({
+                    conta: item,
+                    cliente: user,
+                    city: cidade,
+                    state: estado,
+                  });
+                  this.dataSource = new MatTableDataSource(this.clientes);
+                  this.dataSource.paginator = this.paginator;
+                  this.dataSource.sort = this.sort;
+                  this.dataSource.sortingDataAccessor = (
+                    item: IClienteCompleto,
+                    property: string
+                  ) => {
+                    switch (property) {
+                      case 'id':
+                        return item.cliente.id;
+                      case 'nome':
+                        return item.cliente.nome;
+                      case 'cpf':
+                        return item.cliente.cpf;
+                      case 'saldo':
+                        return item.conta.saldo;
+                      case 'cidade':
+                        return item.city.nome;
+                      case 'estado':
+                        return item.city.estado;
+                      default:
+                        return (item as any)[property];
+                    }
+                  };
+                  const sortState: Sort = {
+                    active: 'saldo',
+                    direction: 'desc',
+                  };
+                  this.sort.direction = sortState.direction;
+                  this.sort.sortChange.emit(sortState);
                 })
               )
             );

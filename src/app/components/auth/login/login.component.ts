@@ -26,7 +26,13 @@ export class LoginComponent implements OnInit {
   ) {
     if (this.authService.usuarioLogado)
       this.router.navigate([
-        '/' + this.authService.usuarioLogado.cargo + '/home',
+        '/' +
+          (this.authService.usuarioLogado.cargo === 'Administrador'
+            ? 'admin'
+            : this.authService.usuarioLogado.cargo === 'Gerente'
+            ? 'gerente'
+            : 'cliente') +
+          '/home',
       ]);
   }
 
@@ -36,12 +42,12 @@ export class LoginComponent implements OnInit {
     );
   }
 
-  async logar(): Promise<void> {
+  logar() {
     this.loading = true;
     if (this.formLogin.form.valid) {
-      await this.authService
+      this.authService
         .login(this.login)
-        .then((usuario: User | undefined) => {
+        .subscribe((usuario: User | undefined) => {
           if (usuario) {
             this.authService.usuarioLogado = usuario;
             if (usuario.cargo == 'cliente') {
@@ -50,12 +56,24 @@ export class LoginComponent implements OnInit {
                 .subscribe((contas: Conta[]) => {
                   this.authService.contaCliente = contas[0];
                   this.router.navigate([
-                    '/' + this.authService.usuarioLogado.cargo + '/home',
+                    '/' +
+                      (this.authService.usuarioLogado.cargo === 'Administrador'
+                        ? 'admin'
+                        : this.authService.usuarioLogado.cargo === 'Gerente'
+                        ? 'gerente'
+                        : 'cliente') +
+                      '/home',
                   ]);
                 });
             } else {
               this.router.navigate([
-                '/' + this.authService.usuarioLogado.cargo + '/home',
+                '/' +
+                  (this.authService.usuarioLogado.cargo === 'Administrador'
+                    ? 'admin'
+                    : this.authService.usuarioLogado.cargo === 'Gerente'
+                    ? 'gerente'
+                    : 'cliente') +
+                  '/home',
               ]);
             }
           } else {
