@@ -7,8 +7,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ClienteService {
-  private apiUrl = 'http://localhost:5003/contas';
-  private apiUrlTransacaos = 'http://localhost:3000/transacaos';
+  private apiUrl = 'http://localhost:5000/conta';
+  private apiUrlTransacaos = 'http://localhost:5000/transacaos';
 
   constructor(private http: HttpClient) {}
 
@@ -34,7 +34,7 @@ export class ClienteService {
 
   getAllTransacaos(): Observable<Transacao[]> {
     return this.http.get<Transacao[]>(
-      this.apiUrlTransacaos + '/transacaos'
+      this.apiUrlTransacaos
       );
   }
 

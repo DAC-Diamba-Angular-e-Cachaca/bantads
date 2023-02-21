@@ -90,10 +90,10 @@ export class ClienteExtratoComponent implements OnInit {
       this.mensagem = '';
       this.allTransacao.forEach((item) => {
         if (
-          dataInicio.value.valueOf() <= item.data! &&
-          dataFinal.value.valueOf() >= item.data! &&
-          (item.idCliente == this.contaCliente.id ||
-            +item.destinatario! == this.contaCliente.id)
+          dataInicio.value.valueOf()/1000 <= item.data!/1000 &&
+          dataFinal.value.valueOf()/1000 >= item.data!/1000 &&
+          (item.idCliente == 1 ||
+            +item.destinatario! == 1)
         ) {
           this.transacaos.push(item);
         }

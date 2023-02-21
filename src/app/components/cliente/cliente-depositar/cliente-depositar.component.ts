@@ -70,11 +70,9 @@ export class ClienteDepositarComponent implements OnInit {
       );
 
       this.clienteService.postTransacao(transacao).subscribe(() => {
-        this.clienteService
-          .atualizarContaCliente(clienteAlterar)
-          .subscribe(() => {
+
             this.router.navigate(['/cliente/home']);
-          });
+
       });
     } else {
       this.mensagem = `O valor de deposito deve ser maior que zero!!!`;
