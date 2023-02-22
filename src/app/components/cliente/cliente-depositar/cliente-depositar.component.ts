@@ -63,16 +63,9 @@ export class ClienteDepositarComponent implements OnInit {
         this.form.value.deposito,
         1
       );
-      let clienteAlterar: Conta = clienteHelper.formatarAlterarSaldoCliente(
-        this.contaCliente,
-        this.form.value.deposito,
-        1
-      );
 
       this.clienteService.postTransacao(transacao).subscribe(() => {
-
-            this.router.navigate(['/cliente/home']);
-
+        this.router.navigate(['/cliente/home']);
       });
     } else {
       this.mensagem = `O valor de deposito deve ser maior que zero!!!`;

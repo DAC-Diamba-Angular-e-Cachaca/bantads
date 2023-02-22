@@ -77,25 +77,9 @@ export class ClienteTransferenciaComponent implements OnInit {
         3,
         this.formTransferencia.value.contaTransferencia
       );
-      let clienteAlterar: User = clienteHelper.formatarAlterarSaldoCliente(
-        this.contaCliente,
-        this.formTransferencia.value.valorTransferencia,
-        3
-      );
-
-      let valorTransferidoContaCliente: Conta = this.contas.find(conta => conta.id == this.formTransferencia.value.contaTransferencia)!;
-      let alterarSalcoTrnsferidoCliente = {...valorTransferidoContaCliente, 
-        saldo: valorTransferidoContaCliente.saldo! + this.formTransferencia.value.valorTransferencia
-      };
 
       this.clienteService.postTransacao(transacao).subscribe(() => {
-        this.clienteService
-          .atualizarContaCliente(clienteAlterar)
-          .subscribe(() => {
-            this.clienteService.atualizarContaCliente(alterarSalcoTrnsferidoCliente).subscribe(() => {
-              this.router.navigate(['/cliente/home']);
-            });
-          });
+        this.router.navigate(['/cliente/home']);
       });
     } else {
         this.mensagem = `Conta do cliente para transferência não encontrado : ${

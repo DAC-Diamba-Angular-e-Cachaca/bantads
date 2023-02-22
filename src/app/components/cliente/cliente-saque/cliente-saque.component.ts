@@ -74,18 +74,9 @@ export class ClienteSaqueComponent implements OnInit {
         this.formSaque.value.saque,
         2
       );
-      const clienteAlterar: Conta = clienteHelper.formatarAlterarSaldoCliente(
-        this.contaCliente,
-        this.formSaque.value.saque,
-        2
-      );
 
       this.clienteService.postTransacao(transacao).subscribe(() => {
-        this.clienteService
-          .atualizarContaCliente(clienteAlterar)
-          .subscribe(() => {
-            this.router.navigate(['/cliente/home']);
-          });
+        this.router.navigate(['/cliente/home']);
       });
     }
   }
