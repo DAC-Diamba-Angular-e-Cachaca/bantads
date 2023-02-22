@@ -4,10 +4,17 @@
 
 export const environment = {
   production: false,
-  link:'http://localhost',
-  name:'development environment',
+  url: {
+    auth: 'http://localhost:5000/auth',
+    cliente: 'http://localhost:5000/cliente',
+    conta: 'http://localhost:5000/conta',
+    transacaos: 'http://localhost:5000/transacaos',
+    gerente: 'http://localhost:5000/gerente',
+    orquestrador: 'http://localhost:5000/orquestrador',
+  },
+  name: 'development environment',
   code: 1001,
- };
+};
 
 /*
  * For easier debugging in development mode, you can import the following file

@@ -1,14 +1,16 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from '@environment/environment';
 import { Transacao } from '@shared/models';
 import { Conta } from '@shared/models/conta.model';
 import { Observable } from 'rxjs';
+
 @Injectable({
   providedIn: 'root',
 })
 export class ClienteService {
-  private apiUrl = 'http://localhost:5000/conta';
-  private apiUrlTransacaos = 'http://localhost:5000/transacaos';
+  private apiUrlConta = environment.url.conta;
+  private apiUrlTransacaos = environment.url.transacaos;
 
   constructor(private http: HttpClient) {}
 
@@ -20,22 +22,18 @@ export class ClienteService {
 
   inserir(conta: Conta): Observable<Conta> {
     return this.http.post<Conta>(
-      this.apiUrl,
+      this.apiUrlConta,
       JSON.stringify(conta),
       this.httpOptions
     );
   }
 
   getAll(): Observable<Conta[]> {
-    return this.http.get<Conta[]>(
-      this.apiUrl + '/list'
-      );
+    return this.http.get<Conta[]>(this.apiUrlConta + '/list');
   }
 
   getAllTransacaos(): Observable<Transacao[]> {
-    return this.http.get<Transacao[]>(
-      this.apiUrlTransacaos
-      );
+    return this.http.get<Transacao[]>(this.apiUrlTransacaos);
   }
 
   postTransacao(transacao: Transacao): Observable<Transacao> {
@@ -47,19 +45,19 @@ export class ClienteService {
   }
 
   buscarContaPorId(id: number): Observable<Conta> {
-    return this.http.get<Conta>(this.apiUrl + '/' + id, this.httpOptions);
+    return this.http.get<Conta>(this.apiUrlConta + '/' + id, this.httpOptions);
   }
 
   buscarContaPorUserId(id: number): Observable<Conta[]> {
     return this.http.get<Conta[]>(
-      this.apiUrl + '/' + id,
+      this.apiUrlConta + '/' + id,
       this.httpOptions
     );
   }
 
   atualizarContaCliente(cliente: Conta): Observable<Conta> {
     return this.http.put<Conta>(
-      this.apiUrl + '/' + cliente.id,
+      this.apiUrlConta + '/' + cliente.id,
       JSON.stringify(cliente),
       this.httpOptions
     );
@@ -67,14 +65,14 @@ export class ClienteService {
 
   getClientesByGerente(idGerente: number): Observable<Conta[]> {
     return this.http.get<Conta[]>(
-      this.apiUrl + '/por-gerente/' + idGerente,
+      this.apiUrlConta + '/por-gerente/' + idGerente,
       this.httpOptions
     );
   }
 
   getClientesPendenteByGerente(idGerente: number): Observable<Conta[]> {
     return this.http.get<Conta[]>(
-      this.apiUrl + '/pendentes/' + idGerente,
+      this.apiUrlConta + '/pendentes/' + idGerente,
       this.httpOptions
     );
   }

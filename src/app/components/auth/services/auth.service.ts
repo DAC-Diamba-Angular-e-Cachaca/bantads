@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from '@environment/environment';
 import { Observable } from 'rxjs';
 import { Login } from './../../../shared/models/login.model';
 import { User } from './../../../shared/models/user.model';
@@ -11,7 +12,7 @@ const LS_CONTA: string = 'conta';
   providedIn: 'root',
 })
 export class AuthService {
-  private apUrlAuth = 'http://localhost:5001/autenticacao/';
+  private apUrlAuth = environment.url.auth;
 
   constructor(private http: HttpClient) {}
 
@@ -41,8 +42,9 @@ export class AuthService {
     return this.http.post<Login>(this.apUrlAuth + '/login', this.httpOptions);
   }
 
-  logout() {
+  logout(): Observable<Object> {
     delete localStorage[LS_USER];
     delete localStorage[LS_CONTA];
+    return this.http.post<Login>(this.apUrlAuth + '/logout', this.httpOptions);
   }
 }

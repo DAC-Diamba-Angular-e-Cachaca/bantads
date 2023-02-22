@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from '@environment/environment';
 import { Observable } from 'rxjs';
 import { User } from './../../../shared/models/user.model';
 
@@ -7,10 +8,10 @@ import { User } from './../../../shared/models/user.model';
   providedIn: 'root',
 })
 export class UserService {
-  private apiUrlGerente = 'http://localhost:5004/gerente';
-  private apiUrlCliente = 'http://localhost:5002/cliente';
-  private apiUrlAuth = 'http://localhost:5001/auth';
-  private apiUrlOrquestrador = 'http://localhost:5005/cliente/'
+  private apiUrlGerente = environment.url.gerente;
+  private apiUrlCliente = environment.url.cliente;
+  private apiUrlAuth = environment.url.auth;
+  private apiUrlOrquestrador = environment.url.orquestrador;
 
   constructor(private http: HttpClient) {}
 
@@ -40,7 +41,7 @@ export class UserService {
 
   inserir(usuario: User): Observable<User> {
     return this.http.post<User>(
-      this.apiUrlOrquestrador,
+      this.apiUrlOrquestrador + '/cliente',
       JSON.stringify(usuario),
       this.httpOptions
     );
@@ -55,7 +56,10 @@ export class UserService {
   }
 
   removerGerente(id: number): Observable<User> {
-    return this.http.delete<User>(this.apiUrlGerente + '/' + id, this.httpOptions);
+    return this.http.delete<User>(
+      this.apiUrlGerente + '/' + id,
+      this.httpOptions
+    );
   }
 
   getUserByEmail(email: string): Observable<User[]> {
@@ -66,15 +70,15 @@ export class UserService {
   }
   getClienteByCPF(cpf: string): Observable<User[]> {
     return this.http.get<User[]>(
-      this.apiUrlCliente + '/por-cpf/' + cpf, 
+      this.apiUrlCliente + '/por-cpf/' + cpf,
       this.httpOptions
-      );
+    );
   }
   getGerenteByCPF(cpf: string): Observable<User[]> {
     return this.http.get<User[]>(
-      this.apiUrlGerente + '/por-cpf/' + cpf, 
+      this.apiUrlGerente + '/por-cpf/' + cpf,
       this.httpOptions
-      );
+    );
   }
 
   getClienteByEmail(email: string): Observable<User[]> {
@@ -92,7 +96,7 @@ export class UserService {
 
   getUserByCPF(cpf: string): Observable<User[]> {
     return this.http.get<User[]>(
-      this.apiUrlCliente + '/por-cpf/' + cpf, 
+      this.apiUrlCliente + '/por-cpf/' + cpf,
       this.httpOptions
     );
   }
